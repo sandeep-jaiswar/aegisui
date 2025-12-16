@@ -24,14 +24,20 @@ std::chrono::microseconds measure_time(Func&& func) {
 }
 
 // Build a scene with N nodes in a flat hierarchy
-void build_flat_scene(aegis::ui::SceneBuilder& builder, std::uint32_t num_nodes) {
+// Returns the first node handle to use as root
+aegis::ui::NodeHandle build_flat_scene(aegis::ui::SceneBuilder& builder, std::uint32_t num_nodes) {
     const aegis::ui::LayoutSpec layout{aegis::ui::SizeMode::Fixed, aegis::ui::SizeMode::Fixed,
                                        100.0f, 100.0f};
 
+    aegis::ui::NodeHandle first_handle{0};
     for (std::uint32_t i = 0; i < num_nodes; ++i) {
-        [[maybe_unused]] const aegis::ui::NodeHandle handle =
+        const aegis::ui::NodeHandle handle =
             builder.add_node({i}, layout, {1}, std::span<const aegis::ui::NodeHandle>{});
+        if (i == 0) {
+            first_handle = handle;
+        }
     }
+    return first_handle;
 }
 
 // Build a scene with N nodes in a deep hierarchy (linked list style)
@@ -99,8 +105,8 @@ void test_linear_scaling() {
 
         times[i] = measure_time([&]() {
             aegis::ui::SceneBuilder builder{arena};
-            build_flat_scene(builder, num_nodes);
-            const aegis::ui::NodeHandle roots[] = {aegis::ui::NodeHandle{0}};
+            const aegis::ui::NodeHandle root = build_flat_scene(builder, num_nodes);
+            const aegis::ui::NodeHandle roots[] = {root};
             const aegis::ui::Scene scene = builder.finalize(std::span{roots, 1});
             (void)scene;
         });
@@ -145,12 +151,16 @@ void test_no_memory_growth_across_frames() {
         aegis::ui::SceneBuilder builder{arena};
 
         // Build scene for this frame
+        aegis::ui::NodeHandle first_handle{0};
         for (std::uint32_t i = 0; i < nodes_per_frame; ++i) {
-            [[maybe_unused]] const aegis::ui::NodeHandle handle =
+            const aegis::ui::NodeHandle handle =
                 builder.add_node({i}, layout, {1}, std::span<const aegis::ui::NodeHandle>{});
+            if (i == 0) {
+                first_handle = handle;
+            }
         }
 
-        const aegis::ui::NodeHandle roots[] = {aegis::ui::NodeHandle{0}};
+        const aegis::ui::NodeHandle roots[] = {first_handle};
         const aegis::ui::Scene scene = builder.finalize(std::span{roots, 1});
         (void)scene;
 
@@ -179,8 +189,8 @@ void test_stable_performance() {
 
         times[i] = measure_time([&]() {
             aegis::ui::SceneBuilder builder{arena};
-            build_flat_scene(builder, num_nodes);
-            const aegis::ui::NodeHandle roots[] = {aegis::ui::NodeHandle{0}};
+            const aegis::ui::NodeHandle root = build_flat_scene(builder, num_nodes);
+            const aegis::ui::NodeHandle roots[] = {root};
             const aegis::ui::Scene scene = builder.finalize(std::span{roots, 1});
             (void)scene;
         });
@@ -217,8 +227,8 @@ void test_very_large_scene() {
 
     const auto build_time = measure_time([&]() {
         aegis::ui::SceneBuilder builder{arena};
-        build_flat_scene(builder, num_nodes);
-        const aegis::ui::NodeHandle roots[] = {aegis::ui::NodeHandle{0}};
+        const aegis::ui::NodeHandle root = build_flat_scene(builder, num_nodes);
+        const aegis::ui::NodeHandle roots[] = {root};
         const aegis::ui::Scene scene = builder.finalize(std::span{roots, 1});
         (void)scene;
     });
@@ -280,22 +290,24 @@ void test_mixed_node_types() {
         const aegis::ui::LayoutSpec layout{aegis::ui::SizeMode::Fixed, aegis::ui::SizeMode::Fixed,
                                            100.0f, 100.0f};
 
+        aegis::ui::NodeHandle first_handle{0};
         for (std::uint32_t i = 0; i < num_nodes; ++i) {
             // Mix of different node types
+            aegis::ui::NodeHandle handle{0};
             if (i % 3 == 0) {
-                [[maybe_unused]] const aegis::ui::NodeHandle handle =
-                    builder.add_text_node({i}, layout, {1}, "Test text");
+                handle = builder.add_text_node({i}, layout, {1}, "Test text");
             } else if (i % 3 == 1) {
                 const aegis::ui::NodeHandle children[] = {};
-                [[maybe_unused]] const aegis::ui::NodeHandle handle =
-                    builder.add_grid_node({i}, layout, {1}, 2, std::span{children, 0});
+                handle = builder.add_grid_node({i}, layout, {1}, 2, std::span{children, 0});
             } else {
-                [[maybe_unused]] const aegis::ui::NodeHandle handle =
-                    builder.add_node({i}, layout, {1}, std::span<const aegis::ui::NodeHandle>{});
+                handle = builder.add_node({i}, layout, {1}, std::span<const aegis::ui::NodeHandle>{});
+            }
+            if (i == 0) {
+                first_handle = handle;
             }
         }
 
-        const aegis::ui::NodeHandle roots[] = {aegis::ui::NodeHandle{0}};
+        const aegis::ui::NodeHandle roots[] = {first_handle};
         const aegis::ui::Scene scene = builder.finalize(std::span{roots, 1});
         (void)scene;
     });
