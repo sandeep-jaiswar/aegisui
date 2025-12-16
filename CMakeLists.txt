@@ -27,3 +27,16 @@ target_compile_options(aegisui PRIVATE
 set_target_properties(aegisui PROPERTIES
     POSITION_INDEPENDENT_CODE OFF
 )
+
+# Test executables
+add_executable(ids_test tests/ids_test.cpp)
+target_link_libraries(ids_test PRIVATE aegisui)
+target_compile_options(ids_test PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
+
+# Enable testing
+enable_testing()
+add_test(NAME ids_test COMMAND ids_test)
