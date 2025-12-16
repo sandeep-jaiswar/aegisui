@@ -18,7 +18,7 @@ struct FixedSize {
     }
 };
 
-/// Flex size specification - flexible sizing with optional weight
+/// Flex size specification - flexible sizing with weight
 /// Compile-time constructible, POD type
 struct FlexSize {
     float weight;
