@@ -74,16 +74,17 @@ void build_wide_tree(aegis::ui::Arena& arena, std::uint32_t num_nodes) {
     while (node_id < num_nodes) {
         children.clear();
 
-        // Create children
+        // Create children (up to children_per_parent or remaining nodes)
         for (std::uint32_t i = 0; i < children_per_parent && node_id < num_nodes; ++i, ++node_id) {
             children.push_back(
                 builder.add_node({node_id}, layout, {1}, std::span<const aegis::ui::NodeHandle>{}));
         }
 
-        // Create parent if we have children
+        // Create parent for these children (if we still have budget)
         if (!children.empty() && node_id < num_nodes) {
             [[maybe_unused]] const aegis::ui::NodeHandle parent =
-                builder.add_node({node_id++}, layout, {1}, std::span{children});
+                builder.add_node({node_id}, layout, {1}, std::span{children});
+            ++node_id;
         }
     }
 }
@@ -93,8 +94,8 @@ void test_linear_scaling() {
     std::cout << "Testing linear scaling (O(n) build time)...\n";
 
     // We'll test with increasing sizes and verify the ratio of time to nodes is roughly constant
-    const std::uint32_t sizes[] = {10000, 20000, 40000, 80000};
-    std::chrono::microseconds times[4];
+    const std::array<std::uint32_t, 4> sizes = {10000, 20000, 40000, 80000};
+    std::array<std::chrono::microseconds, 4> times;
 
     for (std::size_t i = 0; i < 4; ++i) {
         const std::uint32_t num_nodes = sizes[i];
@@ -182,7 +183,7 @@ void test_stable_performance() {
     constexpr std::uint32_t num_iterations = 10;
 
     std::vector<std::byte> buffer(num_nodes * 128);
-    std::chrono::microseconds times[num_iterations];
+    std::array<std::chrono::microseconds, num_iterations> times;
 
     for (std::uint32_t i = 0; i < num_iterations; ++i) {
         aegis::ui::Arena arena{buffer};

@@ -21,6 +21,7 @@ void test_basic_allocation() {
     // Allocate 64 bytes
     void* ptr1 = arena.allocate(64);
     assert(ptr1 != nullptr);
+    // Offset may be larger than 64 due to 8-byte alignment padding
     assert(arena.offset() >= 64);
     assert(arena.remaining() <= 1024 - 64);
 
@@ -122,7 +123,7 @@ void test_multiple_allocations() {
     aegis::ui::Arena arena{buffer};
 
     constexpr std::size_t num_allocs = 100;
-    void* ptrs[num_allocs];
+    std::array<void*, num_allocs> ptrs;
 
     // Make many small allocations
     for (std::size_t i = 0; i < num_allocs; ++i) {
