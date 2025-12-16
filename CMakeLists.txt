@@ -69,6 +69,14 @@ target_compile_options(text_node_test PRIVATE
     -Werror
 )
 
+add_executable(grid_node_test tests/grid_node_test.cpp)
+target_link_libraries(grid_node_test PRIVATE aegisui)
+target_compile_options(grid_node_test PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
+
 # Enable testing
 enable_testing()
 add_test(NAME ids_test COMMAND ids_test)
@@ -76,3 +84,4 @@ add_test(NAME layout_test COMMAND layout_test)
 add_test(NAME style_test COMMAND style_test)
 add_test(NAME node_test COMMAND node_test)
 add_test(NAME text_node_test COMMAND text_node_test)
+add_test(NAME grid_node_test COMMAND grid_node_test)
