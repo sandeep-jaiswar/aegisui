@@ -10,10 +10,11 @@ namespace aegis::ui {
 
 /// UI node in the scene graph
 /// Immutable after construction
+/// Contains only identifiers and layout specification - no virtual functions
 struct Node {
     NodeId id;
-    LayoutIntent layout;
-    Style style;
+    LayoutSpec layout;
+    StyleId style_id;
     std::span<const NodeHandle> children;
 };
 

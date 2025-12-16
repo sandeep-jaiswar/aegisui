@@ -21,10 +21,10 @@ class SceneBuilder {
     /// Add a node to the scene
     /// Returns handle for referencing as child
     /// NOTE: This is a minimal stub implementation returning invalid handle
-    NodeHandle add_node(const NodeId& id, const LayoutIntent& layout, const Style& style) noexcept {
+    NodeHandle add_node(const NodeId& id, const LayoutSpec& layout, const StyleId& style_id) noexcept {
         (void)id;
         (void)layout;
-        (void)style;
+        (void)style_id;
         // Return invalid handle - full implementation will use arena allocation
         return NodeHandle{0};
     }
