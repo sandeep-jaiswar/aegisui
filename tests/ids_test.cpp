@@ -11,7 +11,7 @@ static_assert(std::is_trivially_copyable_v<aegis::ui::StyleId>,
 static_assert(std::is_trivially_copyable_v<aegis::ui::NodeHandle>,
               "NodeHandle must be trivially copyable");
 
-// Test that all ID types have no implicit constructors
+// Test that all ID types are trivially constructible
 static_assert(std::is_trivially_constructible_v<aegis::ui::NodeId>,
               "NodeId must be trivially constructible");
 static_assert(std::is_trivially_constructible_v<aegis::ui::StyleId>,
