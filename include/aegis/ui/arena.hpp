@@ -9,6 +9,7 @@ namespace aegis::ui {
 /// Simple arena allocator for frame-local allocations
 /// All allocations are freed together when the arena is reset
 /// No per-allocation deallocation - memory is reclaimed on reset only
+/// Provides 8-byte alignment for all allocations
 class Arena {
   public:
     /// Construct arena with pre-allocated buffer
@@ -17,9 +18,9 @@ class Arena {
 
     /// Allocate memory from the arena
     /// Returns nullptr if allocation fails (insufficient space)
-    /// No alignment guarantees beyond natural alignment
+    /// Guarantees 8-byte alignment for all allocations
     [[nodiscard]] void* allocate(std::size_t size) noexcept {
-        // Align to 8 bytes for safety
+        // Align to 8 bytes
         constexpr std::size_t alignment = 8;
         const std::size_t aligned_offset = (offset_ + alignment - 1) & ~(alignment - 1);
 
@@ -33,7 +34,7 @@ class Arena {
     }
 
     /// Reset the arena, freeing all allocations
-    /// Does not deallocate individual objects - caller responsible for cleanup
+    /// Note: Does not call destructors - only use with trivially destructible types
     constexpr void reset() noexcept { offset_ = 0; }
 
     /// Get current offset (bytes used)

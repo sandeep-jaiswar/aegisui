@@ -38,9 +38,7 @@ class SceneBuilder {
 
         // Allocate Node in arena
         void* mem = arena_.allocate(sizeof(Node));
-        if (mem == nullptr) {
-            return NodeHandle{0}; // Out of memory
-        }
+        assert(mem != nullptr && "Arena out of memory - increase buffer size");
 
         // Construct Node in-place using placement new
         // NOLINTNEXTLINE(cppcoreguidelines-owning-memory) - Arena manages memory
@@ -60,9 +58,7 @@ class SceneBuilder {
 
         // Allocate TextNode in arena
         void* mem = arena_.allocate(sizeof(TextNode));
-        if (mem == nullptr) {
-            return NodeHandle{0}; // Out of memory
-        }
+        assert(mem != nullptr && "Arena out of memory - increase buffer size");
 
         // Construct TextNode in-place using placement new
         // NOLINTNEXTLINE(cppcoreguidelines-owning-memory) - Arena manages memory
@@ -82,9 +78,7 @@ class SceneBuilder {
 
         // Allocate GridNode in arena
         void* mem = arena_.allocate(sizeof(GridNode));
-        if (mem == nullptr) {
-            return NodeHandle{0}; // Out of memory
-        }
+        assert(mem != nullptr && "Arena out of memory - increase buffer size");
 
         // Construct GridNode in-place using placement new
         // NOLINTNEXTLINE(cppcoreguidelines-owning-memory) - Arena manages memory
@@ -108,9 +102,7 @@ class SceneBuilder {
         }
 
         void* mem = arena_.allocate(roots.size() * sizeof(NodeHandle));
-        if (mem == nullptr) {
-            return Scene{std::span<const NodeHandle>{}}; // Out of memory
-        }
+        assert(mem != nullptr && "Arena out of memory - increase buffer size");
 
         // Copy root handles to arena
         auto* arena_roots = static_cast<NodeHandle*>(mem);
