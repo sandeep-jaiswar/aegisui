@@ -45,7 +45,16 @@ target_compile_options(layout_test PRIVATE
     -Werror
 )
 
+add_executable(style_test tests/style_test.cpp)
+target_link_libraries(style_test PRIVATE aegisui)
+target_compile_options(style_test PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
+
 # Enable testing
 enable_testing()
 add_test(NAME ids_test COMMAND ids_test)
 add_test(NAME layout_test COMMAND layout_test)
+add_test(NAME style_test COMMAND style_test)
