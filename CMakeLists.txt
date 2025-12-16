@@ -101,6 +101,22 @@ target_compile_options(scene_hash_test PRIVATE
     -Werror
 )
 
+add_executable(determinism_test tests/determinism_test.cpp)
+target_link_libraries(determinism_test PRIVATE aegisui)
+target_compile_options(determinism_test PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
+
+add_executable(allocation_guard_test tests/allocation_guard_test.cpp)
+target_link_libraries(allocation_guard_test PRIVATE aegisui)
+target_compile_options(allocation_guard_test PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
+
 # Enable testing
 enable_testing()
 add_test(NAME ids_test COMMAND ids_test)
@@ -112,3 +128,5 @@ add_test(NAME grid_node_test COMMAND grid_node_test)
 add_test(NAME scene_test COMMAND scene_test)
 add_test(NAME scene_builder_test COMMAND scene_builder_test)
 add_test(NAME scene_hash_test COMMAND scene_hash_test)
+add_test(NAME determinism_test COMMAND determinism_test)
+add_test(NAME allocation_guard_test COMMAND allocation_guard_test)
