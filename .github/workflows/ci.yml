@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main, master ]
 
+# Restrict GITHUB_TOKEN permissions for security
+permissions:
+  contents: read
+
 jobs:
   # Format checking with clang-format
   format-check:
