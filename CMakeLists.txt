@@ -117,6 +117,22 @@ target_compile_options(allocation_guard_test PRIVATE
     -Werror
 )
 
+add_executable(arena_test tests/arena_test.cpp)
+target_link_libraries(arena_test PRIVATE aegisui)
+target_compile_options(arena_test PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
+
+add_executable(stress_test tests/stress_test.cpp)
+target_link_libraries(stress_test PRIVATE aegisui)
+target_compile_options(stress_test PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
+
 # Enable testing
 enable_testing()
 add_test(NAME ids_test COMMAND ids_test)
@@ -130,3 +146,5 @@ add_test(NAME scene_builder_test COMMAND scene_builder_test)
 add_test(NAME scene_hash_test COMMAND scene_hash_test)
 add_test(NAME determinism_test COMMAND determinism_test)
 add_test(NAME allocation_guard_test COMMAND allocation_guard_test)
+add_test(NAME arena_test COMMAND arena_test)
+add_test(NAME stress_test COMMAND stress_test)
