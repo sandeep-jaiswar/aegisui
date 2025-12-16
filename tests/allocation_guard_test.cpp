@@ -8,6 +8,13 @@
 
 // UI-DET-003: Allocation Guard Tests
 // Ensure no allocations occur during scene build
+//
+// NOTE: This test uses global operator new/delete overrides to track allocations.
+// This is safe because:
+// 1. This is a single-threaded test executable
+// 2. AllocationGuard is used in a scoped manner (RAII)
+// 3. No multi-threading is used in this test
+// The global state is intentionally simple for test purposes.
 
 // Global allocation tracking
 namespace {
