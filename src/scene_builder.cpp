@@ -8,8 +8,8 @@ namespace {
     constexpr int library_version = 1;
 }
 
-// This function is internal and not exposed in the header
-// It's here to ensure the compilation unit is non-empty
+/// Internal function to ensure compilation unit is non-empty
+/// Not exposed in public API - exists only to produce a linkable object file
 int get_library_version() noexcept {
     return library_version;
 }

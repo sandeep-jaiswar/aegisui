@@ -14,10 +14,13 @@ int main() {
         100.0f
     };
     aegis::ui::Style style{
-        {255, 255, 255, 255},  // background_color
-        {0, 0, 0, 255},        // border_color
+        {255, 255, 255, 255},  // background_color (white)
+        {0, 0, 0, 255},        // border_color (black)
         1.0f,                  // border_width
-        0.0f, 0.0f, 0.0f, 0.0f // padding
+        0.0f,                  // padding_top
+        0.0f,                  // padding_right
+        0.0f,                  // padding_bottom
+        0.0f                   // padding_left
     };
     
     builder.add_node(id, layout, style);

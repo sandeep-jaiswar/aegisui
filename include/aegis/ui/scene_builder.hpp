@@ -20,10 +20,12 @@ public:
 
     /// Add a node to the scene
     /// Returns handle for referencing as child
+    /// NOTE: This is a minimal stub implementation returning invalid handle
     NodeHandle add_node(const NodeId& id, const LayoutIntent& layout, const Style& style) noexcept {
         (void)id;
         (void)layout;
         (void)style;
+        // Return invalid handle - full implementation will use arena allocation
         return NodeHandle{0};
     }
 
