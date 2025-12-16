@@ -28,7 +28,7 @@ static_assert(std::is_trivially_constructible_v<aegis::ui::Style>,
               "Style must be trivially constructible");
 static_assert(std::is_trivially_constructible_v<aegis::ui::StyleEntry>,
               "StyleEntry must be trivially constructible");
-// Note: StyleSheet contains std::span which is not trivially constructible
+// StyleSheet contains std::span which is NOT trivially constructible (has non-trivial constructor)
 
 // Test that all style types are trivially destructible
 static_assert(std::is_trivially_destructible_v<aegis::ui::Color>,
@@ -267,8 +267,8 @@ void test_stylesheet() {
     assert(style_missing == nullptr);
 }
 
-// Test constant-time lookup property
-void test_stylesheet_constant_time_lookup() {
+// Test efficient lookup for small style sets
+void test_stylesheet_efficient_lookup() {
     // Create a small stylesheet (typical use case)
     constexpr aegis::ui::StyleEntry entries[] = {
         {{1}, {{255, 255, 255, 255}, {{0, 0, 0, 255}, 1.0f}, {10.0f, 10.0f, 10.0f, 10.0f}}},
@@ -278,8 +278,8 @@ void test_stylesheet_constant_time_lookup() {
 
     const aegis::ui::StyleSheet sheet{entries};
 
-    // Multiple lookups should be constant-time (O(n) with small n is effectively constant)
-    // This validates the design intent for small style sets
+    // Multiple lookups using linear search O(n)
+    // Efficient for small style sets (typical usage pattern)
     const auto* s1 = sheet.lookup({1});
     const auto* s2 = sheet.lookup({2});
     const auto* s3 = sheet.lookup({3});
@@ -337,7 +337,7 @@ int main() {
     test_style();
     test_style_entry();
     test_stylesheet();
-    test_stylesheet_constant_time_lookup();
+    test_stylesheet_efficient_lookup();
     test_stylesheet_runtime_construction();
     test_no_inheritance_or_cascading();
     return 0;

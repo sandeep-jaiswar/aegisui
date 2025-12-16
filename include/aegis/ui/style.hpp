@@ -81,14 +81,14 @@ struct StyleEntry {
 };
 
 /// StyleSheet - immutable collection of fully resolved styles
-/// Provides constant-time style lookup via linear search over small sets
+/// Provides efficient style lookup via linear search over small sets
 /// No cascading, no inheritance, no runtime computation
 struct StyleSheet {
     std::span<const StyleEntry> entries;
 
     /// Lookup style by ID
     /// Returns pointer to Style if found, nullptr otherwise
-    /// Constant-time for small style sets (expected usage pattern)
+    /// Linear search O(n) - efficient for small style sets (expected usage pattern)
     constexpr const Style* lookup(const StyleId& id) const noexcept {
         for (const auto& entry : entries) {
             if (entry.id == id) {
