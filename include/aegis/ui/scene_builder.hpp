@@ -18,7 +18,7 @@ namespace aegis::ui {
 class SceneBuilder {
   public:
     /// Construct builder with arena for allocations
-    explicit SceneBuilder(Arena& arena) noexcept : arena_(arena), node_count_(0), finalized_(false) {}
+    explicit SceneBuilder(Arena& arena) noexcept : arena_(arena) {}
 
     ~SceneBuilder() = default;
 
@@ -42,8 +42,9 @@ class SceneBuilder {
             return NodeHandle{0}; // Out of memory
         }
 
-        // Construct Node in-place
-        Node* node = new (mem) Node{id, layout, style_id, children};
+        // Construct Node in-place using placement new
+        // NOLINTNEXTLINE(cppcoreguidelines-owning-memory) - Arena manages memory
+        auto* node = new (mem) Node{id, layout, style_id, children};
         (void)node; // Node is in arena, we don't need to track pointer
 
         // Return handle (index in registration order)
@@ -63,8 +64,9 @@ class SceneBuilder {
             return NodeHandle{0}; // Out of memory
         }
 
-        // Construct TextNode in-place
-        TextNode* node = new (mem) TextNode{id, layout, style_id, content};
+        // Construct TextNode in-place using placement new
+        // NOLINTNEXTLINE(cppcoreguidelines-owning-memory) - Arena manages memory
+        auto* node = new (mem) TextNode{id, layout, style_id, content};
         (void)node; // Node is in arena, we don't need to track pointer
 
         // Return handle (index in registration order)
@@ -84,8 +86,9 @@ class SceneBuilder {
             return NodeHandle{0}; // Out of memory
         }
 
-        // Construct GridNode in-place
-        GridNode* node = new (mem) GridNode{id, layout, style_id, columns, children};
+        // Construct GridNode in-place using placement new
+        // NOLINTNEXTLINE(cppcoreguidelines-owning-memory) - Arena manages memory
+        auto* node = new (mem) GridNode{id, layout, style_id, columns, children};
         (void)node; // Node is in arena, we don't need to track pointer
 
         // Return handle (index in registration order)
@@ -120,8 +123,8 @@ class SceneBuilder {
 
   private:
     Arena& arena_;
-    std::uint32_t node_count_; // Track number of registered nodes
-    bool finalized_;
+    std::uint32_t node_count_{0}; // Track number of registered nodes
+    bool finalized_{false};
 };
 
 } // namespace aegis::ui

@@ -13,7 +13,7 @@ class Arena {
   public:
     /// Construct arena with pre-allocated buffer
     /// Buffer must outlive the Arena
-    constexpr Arena(std::span<std::byte> buffer) noexcept : buffer_(buffer), offset_(0) {}
+    constexpr Arena(std::span<std::byte> buffer) noexcept : buffer_(buffer) {}
 
     /// Allocate memory from the arena
     /// Returns nullptr if allocation fails (insufficient space)
@@ -49,7 +49,7 @@ class Arena {
 
   private:
     std::span<std::byte> buffer_;
-    std::size_t offset_;
+    std::size_t offset_{0};
 };
 
 } // namespace aegis::ui
