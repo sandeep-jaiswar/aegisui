@@ -289,7 +289,7 @@ void test_stylesheet_efficient_lookup() {
     assert(s3 != nullptr && s3->background_color.r == 150);
 }
 
-// Test that StyleSheet lookup works correctly
+// Test that StyleSheet can be constructed at runtime
 void test_stylesheet_runtime_construction() {
     // Runtime construction of StyleSheet
     const aegis::ui::StyleEntry entries[] = {
