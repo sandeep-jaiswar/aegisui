@@ -14,6 +14,16 @@ struct NodeId {
     constexpr bool operator!=(const NodeId& other) const noexcept { return value != other.value; }
 };
 
+/// Stable, application-provided identifier for styles
+/// Used for style lookups and caching
+struct StyleId {
+    std::uint64_t value;
+
+    constexpr bool operator==(const StyleId& other) const noexcept { return value == other.value; }
+
+    constexpr bool operator!=(const StyleId& other) const noexcept { return value != other.value; }
+};
+
 /// Internal, frame-local index into arena storage
 /// Never exposed outside Scene
 struct NodeHandle {
