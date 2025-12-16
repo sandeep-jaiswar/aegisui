@@ -1,9 +1,10 @@
 #pragma once
 
+#include <span>
+
 #include "ids.hpp"
 #include "layout.hpp"
 #include "style.hpp"
-#include <span>
 
 namespace aegis::ui {
 

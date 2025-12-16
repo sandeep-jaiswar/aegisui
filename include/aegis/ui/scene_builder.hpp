@@ -1,14 +1,14 @@
 #pragma once
 
-#include "scene.hpp"
 #include "node.hpp"
+#include "scene.hpp"
 
 namespace aegis::ui {
 
 /// Single-use scene builder
 /// Allocates nodes in caller-provided arena
 class SceneBuilder {
-public:
+  public:
     SceneBuilder() = default;
     ~SceneBuilder() = default;
 
@@ -30,9 +30,7 @@ public:
     }
 
     /// Finalize the scene (makes it immutable)
-    Scene finalize() noexcept {
-        return Scene{};
-    }
+    Scene finalize() noexcept { return Scene{}; }
 };
 
 } // namespace aegis::ui
