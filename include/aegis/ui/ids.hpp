@@ -9,13 +9,9 @@ namespace aegis::ui {
 struct NodeId {
     std::uint64_t value;
 
-    constexpr bool operator==(const NodeId& other) const noexcept {
-        return value == other.value;
-    }
+    constexpr bool operator==(const NodeId& other) const noexcept { return value == other.value; }
 
-    constexpr bool operator!=(const NodeId& other) const noexcept {
-        return value != other.value;
-    }
+    constexpr bool operator!=(const NodeId& other) const noexcept { return value != other.value; }
 };
 
 /// Internal, frame-local index into arena storage

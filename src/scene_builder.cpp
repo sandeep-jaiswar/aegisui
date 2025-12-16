@@ -5,7 +5,7 @@ namespace aegis::ui {
 // Minimal implementation to create a non-empty static library
 // This ensures the library links successfully
 namespace {
-    constexpr int library_version = 1;
+constexpr int library_version = 1;
 }
 
 /// Internal function to ensure compilation unit is non-empty

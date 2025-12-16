@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # Format checking with clang-format
+  format-check:
+    name: Code Formatting Check
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format
+
+      - name: Check formatting
+        run: |
+          find include src tests -name '*.cpp' -o -name '*.hpp' -o -name '*.h' | \
+          xargs clang-format --dry-run --Werror
+
+  # Build and analyze with GCC
+  build-gcc:
+    name: Build with GCC
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake g++-13
+
+      - name: Configure CMake
+        run: |
+          cmake -B build \
+            -DCMAKE_CXX_COMPILER=g++-13 \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --verbose
+
+      - name: Verify library was created
+        run: |
+          test -f build/libaegisui.a
+          echo "Library built successfully"
+
+  # Build and analyze with Clang
+  build-clang:
+    name: Build with Clang
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake clang-18
+
+      - name: Configure CMake
+        run: |
+          cmake -B build \
+            -DCMAKE_CXX_COMPILER=clang++-18 \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --verbose
+
+      - name: Verify library was created
+        run: |
+          test -f build/libaegisui.a
+          echo "Library built successfully"
+
+  # Static analysis with clang-tidy
+  clang-tidy:
+    name: Static Analysis (clang-tidy)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake clang-18 clang-tidy-18
+
+      - name: Configure CMake with compile_commands.json
+        run: |
+          cmake -B build \
+            -DCMAKE_CXX_COMPILER=clang++-18 \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Run clang-tidy
+        run: |
+          # Run clang-tidy on all source files
+          find src include -name '*.cpp' -o -name '*.hpp' | \
+          xargs clang-tidy-18 -p build --warnings-as-errors='*'
+
+      - name: Check for unchecked allocations
+        run: |
+          # Additional check to ensure no raw malloc/calloc/new without proper checking
+          echo "Checking for unchecked memory allocations..."
+          ! grep -r "malloc\|calloc\|realloc" src/ include/ || {
+            echo "ERROR: Found raw malloc/calloc/realloc - use RAII or smart pointers"
+            exit 1
+          }
+          echo "No unchecked allocations found"
+
+  # Combined validation job that must pass
+  validation:
+    name: All Checks Passed
+    runs-on: ubuntu-24.04
+    needs: [format-check, build-gcc, build-clang, clang-tidy]
+    steps:
+      - name: Success
+        run: echo "All CI checks passed successfully"
