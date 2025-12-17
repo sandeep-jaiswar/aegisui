@@ -133,6 +133,15 @@ target_compile_options(stress_test PRIVATE
     -Werror
 )
 
+# POC executables
+add_executable(crypto_surveillance_poc poc/crypto_surveillance/main.cpp)
+target_link_libraries(crypto_surveillance_poc PRIVATE aegisui)
+target_compile_options(crypto_surveillance_poc PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
+
 # Enable testing
 enable_testing()
 add_test(NAME ids_test COMMAND ids_test)
@@ -148,3 +157,4 @@ add_test(NAME determinism_test COMMAND determinism_test)
 add_test(NAME allocation_guard_test COMMAND allocation_guard_test)
 add_test(NAME arena_test COMMAND arena_test)
 add_test(NAME stress_test COMMAND stress_test)
+add_test(NAME crypto_surveillance_poc COMMAND crypto_surveillance_poc)
