@@ -119,11 +119,23 @@ jobs:
           }
           echo "No unchecked allocations found"
 
+  # API Freeze enforcement
+  api-freeze-check:
+    name: API Freeze Check
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run API freeze check
+        run: |
+          bash scripts/check_api_freeze.sh
+
   # Combined validation job that must pass
   validation:
     name: All Checks Passed
     runs-on: ubuntu-24.04
-    needs: [format-check, build-gcc, build-clang, clang-tidy]
+    needs: [format-check, build-gcc, build-clang, clang-tidy, api-freeze-check]
     steps:
       - name: Success
         run: echo "All CI checks passed successfully"

@@ -6,6 +6,16 @@ AegisUI converts application state into immutable scene graphs. It is **not** a 
 
 ---
 
+## ⚠️ Status: AegisUI v0.1 is FROZEN
+
+**As of version 0.1.0, the AegisUI API and specification are FROZEN.**
+
+No new features, widgets, or API changes will be accepted until formal unfreezing.
+
+See **[Freeze Specification](#freeze-specification)** for details.
+
+---
+
 ## What This Is
 
 AegisUI is a **compile-time, statically-typed UI construction library** that:
@@ -82,14 +92,25 @@ We are **removing the problem they exist to solve**.
 
 ---
 
-## Documentation
+## Freeze Specification
 
-**Required reading before contributing:**
+**AegisUI v0.1 is formally specified and frozen. The complete specification includes:**
 
+### Normative Specifications
+- **[SPEC_EXECUTION.md](docs/SPEC_EXECUTION.md)** — Execution model and frame lifecycle
+- **[SPEC_API.md](docs/SPEC_API.md)** — Public API surface (FROZEN)
+- **[SPEC_WIDGET_LIFECYCLE.md](docs/SPEC_WIDGET_LIFECYCLE.md)** — Widget lifecycle contract
+- **[SPEC_INVARIANTS.md](docs/SPEC_INVARIANTS.md)** — Determinism and memory guarantees
+
+### Design Documentation
 - [High-Level Design (HLD)](docs/HLD.md) — Architecture and design principles
 - [Low-Level Design (LLD)](docs/LLD.md) — Implementation details and module structure
 - [Non-Goals](docs/NON_GOALS.md) — Explicitly out-of-scope features
+
+### Contributing
 - [CONTRIBUTING.md](CONTRIBUTING.md) — How to contribute to this project
+
+**All changes must conform to the frozen specifications above.**
 
 ---
 
