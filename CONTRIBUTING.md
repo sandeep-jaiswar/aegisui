@@ -6,16 +6,46 @@ Thank you for your interest in contributing to AegisUI.
 
 ---
 
+## ⚠️ API Freeze Notice
+
+**AegisUI v0.1 is FROZEN as of 2025-12-17.**
+
+**No new features, widgets, or API changes are permitted until formal unfreezing.**
+
+All contributions must conform to the **frozen specifications**:
+- **[SPEC_EXECUTION.md](docs/SPEC_EXECUTION.md)** — Execution model
+- **[SPEC_API.md](docs/SPEC_API.md)** — Public API surface (FROZEN)
+- **[SPEC_WIDGET_LIFECYCLE.md](docs/SPEC_WIDGET_LIFECYCLE.md)** — Widget lifecycle
+- **[SPEC_INVARIANTS.md](docs/SPEC_INVARIANTS.md)** — Determinism and memory guarantees
+
+**Acceptable contributions during freeze:**
+- Bug fixes that maintain spec compliance
+- Test additions
+- Documentation improvements
+- Performance optimizations that preserve semantics
+
+**Rejected during freeze:**
+- New widgets or node types
+- API additions or changes
+- New features
+- Breaking changes
+
+---
+
 ## Prerequisites
 
 ### You MUST Read These First
 
 Before writing **any code**, you must read and understand:
 
-1. **[docs/HLD.md](docs/HLD.md)** — High-Level Design
-2. **[docs/LLD.md](docs/LLD.md)** — Low-Level Design  
-3. **[docs/NON_GOALS.md](docs/NON_GOALS.md)** — What we will never do
-4. **[.github/COPILOT_INSTRUCTIONS.md](.github/COPILOT_INSTRUCTIONS.md)** — Coding standards and mindset
+1. **[docs/SPEC_EXECUTION.md](docs/SPEC_EXECUTION.md)** — Execution Model Specification (FROZEN)
+2. **[docs/SPEC_API.md](docs/SPEC_API.md)** — Public API Specification (FROZEN)
+3. **[docs/SPEC_WIDGET_LIFECYCLE.md](docs/SPEC_WIDGET_LIFECYCLE.md)** — Widget Lifecycle Specification (FROZEN)
+4. **[docs/SPEC_INVARIANTS.md](docs/SPEC_INVARIANTS.md)** — Determinism & Memory Invariants (FROZEN)
+5. **[docs/HLD.md](docs/HLD.md)** — High-Level Design
+6. **[docs/LLD.md](docs/LLD.md)** — Low-Level Design  
+7. **[docs/NON_GOALS.md](docs/NON_GOALS.md)** — What we will never do
+8. **[.github/COPILOT_INSTRUCTIONS.md](.github/COPILOT_INSTRUCTIONS.md)** — Coding standards and mindset
 
 If you submit code that contradicts these documents, your contribution **will be rejected** — even if it works.
 
@@ -37,6 +67,14 @@ If your contribution optimizes for developer convenience at the expense of these
 ## Rejection Criteria
 
 Your contribution **will be rejected** if it:
+
+### Violates Frozen Specifications
+
+* ❌ Adds new public APIs not in [SPEC_API.md](docs/SPEC_API.md)
+* ❌ Changes frozen API signatures or semantics
+* ❌ Violates execution model in [SPEC_EXECUTION.md](docs/SPEC_EXECUTION.md)
+* ❌ Breaks widget lifecycle in [SPEC_WIDGET_LIFECYCLE.md](docs/SPEC_WIDGET_LIFECYCLE.md)
+* ❌ Violates invariants in [SPEC_INVARIANTS.md](docs/SPEC_INVARIANTS.md)
 
 ### Violates Core Principles
 
@@ -128,9 +166,15 @@ Tests must **not** depend on:
 
 If your change affects:
 
-* Public APIs → update [docs/LLD.md](docs/LLD.md)
-* Design philosophy → update [docs/HLD.md](docs/HLD.md)  
+* Public APIs → update [docs/SPEC_API.md](docs/SPEC_API.md) (only if unfrozen)
+* Execution model → update [docs/SPEC_EXECUTION.md](docs/SPEC_EXECUTION.md) (only if unfrozen)
+* Widget lifecycle → update [docs/SPEC_WIDGET_LIFECYCLE.md](docs/SPEC_WIDGET_LIFECYCLE.md) (only if unfrozen)
+* Invariants → update [docs/SPEC_INVARIANTS.md](docs/SPEC_INVARIANTS.md) (only if unfrozen)
+* Design philosophy → update [docs/HLD.md](docs/HLD.md)
+* Implementation details → update [docs/LLD.md](docs/LLD.md)  
 * Scope decisions → update [docs/NON_GOALS.md](docs/NON_GOALS.md)
+
+**During API freeze:** Spec changes require major version bump and are generally rejected.
 
 **Documentation is law.** If code and docs disagree, the docs win.
 
