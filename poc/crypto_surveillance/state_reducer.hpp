@@ -15,11 +15,26 @@ constexpr std::size_t MAX_DISPLAY_TRADES = 1000;
 /// Application state derived from trade events
 /// Pure reduction - no side effects, deterministic output
 struct TradeState {
-    std::array<TradeEvent, MAX_DISPLAY_TRADES> trades; // Recent trades
-    std::size_t trade_count{0};                         // Actual number of trades (up to MAX)
+    std::array<TradeEvent, MAX_DISPLAY_TRADES> trades; // Circular buffer of recent trades
+    std::size_t trade_count{0};                         // Number of trades (up to MAX)
+    std::size_t write_index{0};                         // Next write position in circular buffer
     std::uint64_t total_trades{0};                      // Total trades processed
     std::uint64_t last_timestamp_us{0};                 // Most recent event timestamp
 };
+
+/// Helper to add trade to circular buffer
+inline void add_trade_to_buffer(TradeState& state, const TradeEvent& event) noexcept {
+    if (state.trade_count < MAX_DISPLAY_TRADES) {
+        // Still filling initial buffer
+        state.trades[state.trade_count] = event;
+        state.trade_count++;
+        state.write_index = state.trade_count % MAX_DISPLAY_TRADES;
+    } else {
+        // Buffer full, use circular overwrite
+        state.trades[state.write_index] = event;
+        state.write_index = (state.write_index + 1) % MAX_DISPLAY_TRADES;
+    }
+}
 
 /// Pure state reducer - converts events to application state
 /// Deterministic: same events → identical state
@@ -37,18 +52,8 @@ class StateReducer {
                 state.last_timestamp_us = event.timestamp_us;
             }
 
-            // Add to circular buffer of recent trades
-            if (state.trade_count < MAX_DISPLAY_TRADES) {
-                state.trades[state.trade_count] = event;
-                state.trade_count++;
-            } else {
-                // Shift trades and add new one at the end
-                for (std::size_t i = 0; i < MAX_DISPLAY_TRADES - 1; ++i) {
-                    state.trades[i] = state.trades[i + 1];
-                }
-                state.trades[MAX_DISPLAY_TRADES - 1] = event;
-            }
-
+            // Add to circular buffer
+            add_trade_to_buffer(state, event);
             state.total_trades++;
         }
 
@@ -66,18 +71,8 @@ class StateReducer {
                 state.last_timestamp_us = event.timestamp_us;
             }
 
-            // Add to circular buffer of recent trades
-            if (state.trade_count < MAX_DISPLAY_TRADES) {
-                state.trades[state.trade_count] = event;
-                state.trade_count++;
-            } else {
-                // Shift trades and add new one at the end
-                for (std::size_t i = 0; i < MAX_DISPLAY_TRADES - 1; ++i) {
-                    state.trades[i] = state.trades[i + 1];
-                }
-                state.trades[MAX_DISPLAY_TRADES - 1] = event;
-            }
-
+            // Add to circular buffer
+            add_trade_to_buffer(state, event);
             state.total_trades++;
         }
 

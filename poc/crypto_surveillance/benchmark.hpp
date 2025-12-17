@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <chrono>
 #include <cstdint>
 #include <vector>
@@ -54,7 +55,7 @@ class BenchmarkHarness {
             return {};
         }
 
-        // Sort times for percentile calculation
+        // Sort times for percentile calculation (make a copy to preserve original)
         auto sorted = frame_times_;
         std::sort(sorted.begin(), sorted.end());
 

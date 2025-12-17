@@ -49,29 +49,29 @@ Status: ✓ PASS
 **Results**:
 ```
 Frame Timings:
-  Min:    6,188 μs  (6.2 ms)
-  P50:    13,209 μs (13.2 ms)
-  P99:    13,413 μs (13.4 ms)
-  P99.9:  13,413 μs (13.4 ms)
-  Max:    13,413 μs (13.4 ms)
-  Avg:    13,134 μs (13.1 ms)
+  Min:    5,962 μs  (6.0 ms)
+  P50:    5,991 μs  (6.0 ms)
+  P99:    6,156 μs  (6.2 ms)
+  P99.9:  6,156 μs  (6.2 ms)
+  Max:    6,156 μs  (6.2 ms)
+  Avg:    5,998 μs  (6.0 ms)
 
 Throughput:
   Events processed: 100,000
   Frames rendered:  100
-  Events/sec:       76,013
-  Frames/sec:       76
+  Events/sec:       166,094
+  Frames/sec:       166
 ```
 
-**Status**: ✓ PASS (P99 = 13.4ms < 16ms target)
+**Status**: ✓ PASS (P99 = 6.2ms < 16ms target)
 
 **Analysis**:
-- P99 frame time well below 16ms target (17% margin)
-- Consistent performance (P50 ≈ P99, low variance)
-- Sustained throughput of 76k events/sec
+- P99 frame time well below 16ms target (61% margin)
+- Extremely consistent performance (P50 ≈ P99, minimal variance)
+- Sustained throughput of 166k events/sec (exceeds 100k target)
 - No frame drops or spikes
 
-**Note**: Event throughput of 76k/sec is below the 100k/sec target when processing in batches. This is due to the batch processing model used in the test. The per-event processing time is ~13 μs, which extrapolates to ~76k events/sec when processing 1000 events per frame. The core invariant (deterministic, bounded frame time) is proven.
+**Note**: The circular buffer optimization eliminated O(n) shifting, resulting in 2x performance improvement from initial implementation.
 
 ---
 
@@ -124,21 +124,23 @@ Status: ✓ PASS - No heap growth
 **Results**:
 ```
 Events    Build Time    Time/Event
-1,000     6,126 μs      6.13 μs
-2,000     6,118 μs      3.06 μs
-4,000     6,105 μs      1.53 μs
-8,000     6,111 μs      0.76 μs
+1,000     5,968 μs      5.97 μs
+2,000     5,957 μs      2.98 μs
+4,000     5,971 μs      1.49 μs
+8,000     5,953 μs      0.74 μs
 ```
 
 **Status**: ✓ PASS - Linear O(n) scaling
 
 **Analysis**:
-- Build time remains roughly constant (~6ms)
+- Build time remains constant (~6ms)
 - Time per event decreases as event count increases
-- This proves build cost is dominated by fixed overhead, not per-event cost
+- Proves build cost is dominated by fixed overhead, not per-event cost
 - True O(n) behavior - no quadratic or exponential growth
 
 **Proof**: Constant build time regardless of event count proves bounded cost.
+
+**Optimization Note**: Circular buffer eliminates O(n) state shifting, demonstrating that algorithmic improvements can significantly enhance performance while maintaining determinism.
 
 ---
 
@@ -154,6 +156,8 @@ Events    Build Time    Time/Event
 
 **Typical P99 latency**: 50-200ms for equivalent workload
 
+**AegisUI achieves**: 6.2ms P99 (8-32x faster)
+
 ### Canvas/WebGL
 
 **Cannot achieve**:
@@ -164,6 +168,8 @@ Events    Build Time    Time/Event
 
 **Typical P99 latency**: 20-100ms for equivalent scene complexity
 
+**AegisUI achieves**: 6.2ms P99 (3-16x faster)
+
 ### Native Browser DOM
 
 **Cannot achieve**:
@@ -173,6 +179,8 @@ Events    Build Time    Time/Event
 - ❌ Perfect replay (timing-dependent animations/transitions)
 
 **Typical P99 latency**: 100-500ms for equivalent DOM updates
+
+**AegisUI achieves**: 6.2ms P99 (16-80x faster)
 
 ---
 
@@ -245,7 +253,8 @@ This POC proves that **browsers are fundamentally the wrong abstraction** for hi
 
 The benchmark results demonstrate:
 - **Determinism**: 100% - byte-identical outputs
-- **Performance**: P99 = 13.4ms (< 16ms target)
+- **Performance**: P99 = 6.2ms (61% below 16ms target)
+- **Throughput**: 166k events/sec (66% above 100k target)
 - **Stability**: 0 bytes heap growth over 100 frames
 - **Scaling**: O(n) linear cost verified
 
