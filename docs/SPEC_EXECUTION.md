@@ -307,11 +307,12 @@ After finalization, `Scene` is immutable:
 If arena has insufficient space:
 - `allocate()` returns `nullptr`
 - Assertion fails in debug builds
-- Undefined behavior in release builds
+- In release builds, builder operations that receive `nullptr` will also trigger assertions
 
 **Application responsibility:**
 - Provide sufficiently large arena buffer
 - Monitor arena usage if needed
+- Size arena for worst-case scene complexity
 
 ### 9.2 API Misuse
 

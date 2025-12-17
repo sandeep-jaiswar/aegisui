@@ -62,7 +62,7 @@ echo "✅ No new public headers detected"
 
 # Check for new public namespaces (anything outside aegis::ui)
 echo "Checking for unauthorized namespaces..."
-NAMESPACE_VIOLATIONS=$(grep -r "^namespace aegis::" include/ --include="*.hpp" | \
+NAMESPACE_VIOLATIONS=$(grep -r "^\s*namespace aegis::" include/ --include="*.hpp" | \
     grep -v "namespace aegis::ui" | \
     grep -v "namespace aegis::ui::" || true)
 

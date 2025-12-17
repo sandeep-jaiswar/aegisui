@@ -365,7 +365,7 @@ NodeHandle add_grid_node(
 ```
 
 **Contract:**
-- `columns > 0` (not enforced, UB if violated)
+- `columns` should be > 0 (enforced in debug builds via assertion, UB in release if violated)
 - `children` span must remain valid for frame lifetime
 - Child handles must be valid
 - Row count = ceil(children.size() / columns)
